@@ -41,7 +41,7 @@ function start() {
             );
         }
 
-        console.log(table.toString());
+        console.log("\n" + table.toString() + "\n");
 
         inquirer.prompt({
             input: "input",
@@ -49,8 +49,13 @@ function start() {
             name: "id"
         })
             .then((userIn) => {
-                console.log(res[parseInt(userIn.id) - 1]);
-                buyItem(res[parseInt(userIn.id) - 1]);
+                if ((parseInt(userIn.id)) <= 10 && (parseInt(userIn.id)) >= 1) {
+                    console.log(res[parseInt(userIn.id) - 1]);
+                    buyItem(res[parseInt(userIn.id) - 1]);
+                } else {
+                    console.log("\nPlease enter a valid id...");
+                    start();
+                }
             });
     });
 }
@@ -62,17 +67,21 @@ function buyItem(item) {
         name: "quantity"
     })
         .then((userIn) => {
-            connection.query(
-                "UPDATE products SET ? WHERE ?",
-                [
-                    {
-                        stock_quantity: item.stock_quantity - parseInt(userIn.quantity)
-                    },
-                    {
-                        item_id: item.item_id
-                    }
-                ],
-            );
+            if ((item.stock_quantity - parseInt(userIn.quantity)) >= 0) {
+                connection.query(
+                    "UPDATE products SET ? WHERE ?",
+                    [
+                        {
+                            stock_quantity: item.stock_quantity - parseInt(userIn.quantity)
+                        },
+                        {
+                            item_id: item.item_id
+                        }
+                    ],
+                );
+            } else {
+                console.log("\nInsufficient Stock, Sorry...");
+            }
             start();
         });
 }
