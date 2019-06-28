@@ -29,10 +29,6 @@ function start() {
         if (err) throw err;
         var table = new Table({
             head: ['Item_ID', 'Name', 'Department', 'Price', 'Stock']
-            , style: {
-                head: []    //disable colors in header cells
-                , border: []  //disable colors for the border
-            }
         });
 
         for (let i = 0; i < res.length; i++) {
@@ -45,14 +41,19 @@ function start() {
 
         inquirer.prompt({
             input: "input",
-            message: "What is the ID of the item you would like to purchase?",
+            message: "What is the ID of the item you would like to purchase? (press q to quit)",
             name: "id"
         })
             .then((userIn) => {
                 if ((parseInt(userIn.id)) <= 10 && (parseInt(userIn.id)) >= 1) {
                     console.log(res[parseInt(userIn.id) - 1]);
                     buyItem(res[parseInt(userIn.id) - 1]);
-                } else {
+                } 
+                else  if(userIn.id === "q") {
+                    console.log("\nGOODBYE\n");
+                    connection.end();
+                }
+                else {
                     console.log("\nPlease enter a valid id...");
                     start();
                 }
@@ -63,7 +64,7 @@ function start() {
 function buyItem(item) {
     inquirer.prompt({
         input: "input",
-        message: "How many would you like?",
+        message: "How many would you like? (press q to quit)",
         name: "quantity"
     })
         .then((userIn) => {
@@ -79,10 +80,16 @@ function buyItem(item) {
                         }
                     ],
                 );
-            } else {
-                console.log("\nInsufficient Stock, Sorry...");
+                start();
+            } 
+            else if(userIn.quantity === "q"){
+                console.log("\nGOODBYE\n");
+                connection.end();
             }
-            start();
+            else {
+                console.log("\nInsufficient Stock, Sorry...");
+                start();
+            }
         });
 }
 
