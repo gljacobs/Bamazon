@@ -41,7 +41,7 @@ function start() {
 
         inquirer.prompt({
             input: "input",
-            message: "What is the ID of the item you would like to purchase? (press q to quit)",
+            message: "What is the ID of the item you would like to purchase? (enter q to quit)",
             name: "id"
         })
             .then((userIn) => {
@@ -64,7 +64,7 @@ function start() {
 function buyItem(item) {
     inquirer.prompt({
         input: "input",
-        message: "How many would you like? (press q to quit)",
+        message: "How many would you like? (enter q to quit)",
         name: "quantity"
     })
         .then((userIn) => {
